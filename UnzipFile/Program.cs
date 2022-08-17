@@ -64,6 +64,10 @@ namespace UnzipFile
                         }
                     }
                 }
+                else
+                {
+                    Console.WriteLine("Extension not valid, file extension is {0}", fi.Extension);
+                }
             }
         }
 
@@ -79,12 +83,13 @@ namespace UnzipFile
                         fi.Extension.Length);
 
                 //Create the decompressed file.
-                using (FileStream outFile = File.Create(origName))
-                {
+                //using (FileStream outFile = File.Create(origName + DateTime.Now.ToString()))
+                //{
 
                     ZipFile.ExtractToDirectory(fi.FullName, outputPath, true);
 
                     Console.WriteLine("Decompressed: {0}", fi.Name);
+                    
                     //using (GZipStream Decompress = new GZipStream(inFile,
                     //    CompressionMode.Decompress))
                     //{
@@ -94,7 +99,7 @@ namespace UnzipFile
 
                     //    Console.WriteLine("Decompressed: {0}", fi.Name);
                     //}
-                }
+                //}
             }
         }
     }
