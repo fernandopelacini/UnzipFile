@@ -1,5 +1,7 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Aspose.Zip.Rar;
+using Microsoft.Extensions.Configuration;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 
@@ -20,8 +22,9 @@ namespace UnzipFile
 
             //DirectoryInfo di = new DirectoryInfo(zipPath);
             FileInfo fi = new FileInfo(fullPathName);
-            Decompress(fi,unzipPath);
-
+            //Decompress(fi, unzipPath);
+            //DecompressRar(fi, unzipPath);
+            DecompressWinrar(fi, unzipPath);
             //// Compress the directory's files.
             //foreach (FileInfo fi in di.GetFiles())
             //{
@@ -31,7 +34,7 @@ namespace UnzipFile
             // Decompress all *.gz files in the directory.
             //foreach (FileInfo fi in di.GetFiles(fullPathName))
             //{
-                
+
             //    Decompress(fi);
             //}
         }
@@ -83,13 +86,13 @@ namespace UnzipFile
                         fi.Extension.Length);
 
                 //Create the decompressed file.
-                //using (FileStream outFile = File.Create(origName + DateTime.Now.ToString()))
-                //{
+                using (FileStream outFile = File.Create(origName))
+                {
 
                     ZipFile.ExtractToDirectory(fi.FullName, outputPath, true);
 
                     Console.WriteLine("Decompressed: {0}", fi.Name);
-                    
+
                     //using (GZipStream Decompress = new GZipStream(inFile,
                     //    CompressionMode.Decompress))
                     //{
@@ -99,7 +102,52 @@ namespace UnzipFile
 
                     //    Console.WriteLine("Decompressed: {0}", fi.Name);
                     //}
-                //}
+                }
+            }
+        }
+
+        /// <summary>
+        /// Decompress using the Aspose.zip nuget, works only with .rar extension
+        /// </summary>
+        /// <param name="fi"></param>
+        /// <param name="outputPath"></param>
+        public static void DecompressRar(FileInfo fi, string outputPath)
+        {
+            // Load input RAR file.
+            RarArchive archive = new RarArchive(fi.FullName);
+
+            // Unrar or extract all files from the archive
+            archive.ExtractToDirectory(outputPath);
+        }
+
+        /// <summary>
+        /// Decompress calling winrar.exe directly, has to be installed on terminal
+        /// </summary>
+        /// <param name="fi"></param>
+        /// <param name="outputPath"></param>
+        public static void DecompressWinrar(FileInfo fi, string outputPath)
+        {
+                        
+            ProcessStartInfo startInfo = new ProcessStartInfo("C:\\Program Files\\WinRAR\\WinRAR.exe");
+            startInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            startInfo.Arguments = string.Format("x -ibck -o+ \"{0}\" \"{1}\"",
+                                  fi.FullName, outputPath);
+
+            Console.WriteLine("Startinfo arguments: " + startInfo.Arguments.ToString());
+            try
+            {
+                // Start the process with the info we specified.
+
+                using (Process exeProcess = Process.Start(startInfo))
+                {
+                    exeProcess.WaitForExit();
+                }
+            }
+            catch (Exception ex)
+            {
+                {
+                    Console.WriteLine(ex.Message);
+                }
             }
         }
     }

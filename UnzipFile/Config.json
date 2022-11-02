@@ -8,8 +8,8 @@
     "**/platforms"
   ],
 
-  "UnzipPath": "C:\\Users\\Fernando\\source\\repos\\UnzipFile\\UnzipFile\\Bin",
-  "ZipPath": "C:\\Users\\Fernando\\source\\repos\\UnzipFile\\UnzipFile\\",
-  "ZipFileName": "test.zip"
+  "UnzipPath": "C:\\Code\\UnzipFile\\UnzipFile\\Reports",
+  "ZipPath": "C:\\Code\\UnzipFile\\UnzipFile\\",
+  "ZipFileName": "Reportes.rar"
 
 }
